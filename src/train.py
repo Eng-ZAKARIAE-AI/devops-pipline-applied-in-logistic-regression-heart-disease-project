@@ -1,3 +1,5 @@
+import os
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -10,17 +12,6 @@ from sklearn.preprocessing import StandardScaler
 # 1. CHARGEMENT DES DONNÉES RÉELLES (UCI Heart Disease - Cleveland)
 # ============================================================
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data"
-
-import os
-import joblib
-
-# Créer le dossier artifacts s'il n'existe pas encore
-os.makedirs("artifacts", exist_ok=True)
-
-joblib.dump(w, "artifacts/model_weights.pkl")
-# ... tes autres lignes joblib.dump(...)
-
-
 
 columns = [
     "age",
@@ -134,6 +125,7 @@ print(
 # ============================================================
 # 5. SAUVEGARDE DU MODÈLE + SCALER
 # ============================================================
+os.makedirs("artifacts", exist_ok=True)
 joblib.dump(w, "artifacts/model_weights.pkl")
 joblib.dump(b, "artifacts/model_bias.pkl")
 joblib.dump(scaler, "artifacts/scaler.pkl")
