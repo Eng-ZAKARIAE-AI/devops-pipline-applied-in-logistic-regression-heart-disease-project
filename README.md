@@ -212,7 +212,12 @@ curl -X POST http://localhost:5000/predict \
 ```
 http://localhost:5000/predict?age=52&sex=1&cp=0&trestbps=125&chol=212&fbs=0&restecg=0&thalach=168&exang=0&oldpeak=1.0&slope=2&ca=0&thal=2
 ```
+### GET /predict from the server :
 
+```
+https://backend-heart-app.fly.dev/predict?age=52&sex=1&cp=0&trestbps=125&chol=212&fbs=0&restecg=0&thalach=168&exang=0&oldpeak=1.0&slope=2&ca=0&thal=2
+
+```
 ### Response
 
 ```json
