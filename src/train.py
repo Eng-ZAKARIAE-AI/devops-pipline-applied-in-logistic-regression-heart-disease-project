@@ -11,6 +11,17 @@ from sklearn.preprocessing import StandardScaler
 # ============================================================
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data"
 
+import os
+import joblib
+
+# Créer le dossier artifacts s'il n'existe pas encore
+os.makedirs("artifacts", exist_ok=True)
+
+joblib.dump(w, "artifacts/model_weights.pkl")
+# ... tes autres lignes joblib.dump(...)
+
+
+
 columns = [
     "age",
     "sex",
