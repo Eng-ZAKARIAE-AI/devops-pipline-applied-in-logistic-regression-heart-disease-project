@@ -1,8 +1,10 @@
 import joblib
 import numpy as np
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # --- Chargement du modèle AU DÉMARRAGE ---
 w = joblib.load("artifacts/model_weights.pkl")
@@ -35,34 +37,35 @@ def health():
     return jsonify({"status": "ok", "model_loaded": True})
 
 
-@app.route("/predict", methods=["POST"])
+def _predict_from_dict(data):
+    missing = [f for f in FEATURE_NAMES if f not in data]
+    if missing:
+        return jsonify({"error": f"Features manquantes : {missing}"}), 400
+
+    x = np.array([[float(data[f]) for f in FEATURE_NAMES]])
+    x_scaled = scaler.transform(x)
+    z = x_scaled @ w + b
+    p = sigmoid(z)
+    pred = int(p[0] >= 0.5)
+
+    return jsonify(
+        {
+            "logit": round(float(z[0]), 4),
+            "probability": round(float(p[0]), 4),
+            "prediction": pred,
+            "label": "Maladie cardiaque" if pred == 1 else "Pas de maladie",
+        }
+    )
+
+
+@app.route("/predict", methods=["POST", "GET"])
 def predict():
     try:
-        data = request.get_json(force=True)
-
-        # Validation des champs
-        missing = [f for f in FEATURE_NAMES if f not in data]
-        if missing:
-            return jsonify({"error": f"Features manquantes : {missing}"}), 400
-
-        # Vecteur de features dans l'ordre exact de l'entraînement
-        x = np.array([[data[f] for f in FEATURE_NAMES]])
-
-        # --- PIPELINE COMPLET ---
-        x_scaled = scaler.transform(x)  # 1. Normalisation
-        z = x_scaled @ w + b  # 2. LOGIT
-        p = sigmoid(z)  # 3. PROBABILITÉ
-        pred = int(p[0] >= 0.5)  # 4. CLASSE
-
-        return jsonify(
-            {
-                "logit": round(float(z[0]), 4),
-                "probability": round(float(p[0]), 4),
-                "prediction": pred,
-                "label": "Maladie cardiaque" if pred == 1 else "Pas de maladie",
-            }
-        )
-
+        if request.method == "GET":
+            data = {k: v for k, v in request.args.items()}
+        else:
+            data = request.get_json(force=True)
+        return _predict_from_dict(data)
     except Exception as e:  # noqa: BLE001
         return jsonify({"error": str(e)}), 500
 
