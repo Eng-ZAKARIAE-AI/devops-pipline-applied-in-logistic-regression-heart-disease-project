@@ -29,11 +29,9 @@ jobs:
 
       - name: Train model artifacts
         run: python src/train.py
-        working-directory: logistic-regression-heart-disease
 
       - name: Run pytest test suite
         run: python -m pytest tests/ -v
-        working-directory: logistic-regression-heart-disease
 
   build:
     runs-on: ubuntu-latest
@@ -48,7 +46,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          context: logistic-regression-heart-disease
+          context: .
           load: true
           tags: logistic-regression-api:ci
 
