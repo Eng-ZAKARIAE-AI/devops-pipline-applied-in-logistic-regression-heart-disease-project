@@ -8,7 +8,7 @@
 
 A binary logistic regression classifier written **from scratch** (no `sklearn.linear_model`), trained on the UCI Cleveland Heart Disease dataset and served through a REST API with an interactive Three.js front end.
 
-**Goal:** go beyond a notebook. Train a model, save its artifacts, expose it as an API, and put a usable interface on top of it, model is a live on cloud machine ![model](https://backend-heart-app.fly.dev).
+**Goal:** go beyond a notebook. Train a model, save its artifacts, expose it as an API, and put a usable interface on top of it, model is a live on cloud machine ``` https://backend-heart-app.fly.dev ```
 
 > **Disclaimer:** this is an educational project. It is not a medical device and must not be used for diagnosis or treatment decisions.
 
